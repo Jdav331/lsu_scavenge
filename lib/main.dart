@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('PFT Scavenger Hunt'),
+        title: const Text('PFT Scavenger Hunt 🐾'),
         actions: [
           IconButton(
             icon: const Icon(Icons.image),
@@ -167,8 +167,10 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   void _submitAnswer() {
     String answer = _answerController.text.trim().toLowerCase();
     if (answer == widget.task.correctAnswer.toLowerCase()) {
+      // Add a tiger emoji for the LSU mascot task
+      String message = (widget.task.id == 4) ? 'Correct! 🐯' : 'Correct!';
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Correct!'), backgroundColor: Colors.green),
+        SnackBar(content: Text(message), backgroundColor: Colors.green),
       );
       Future.delayed(const Duration(seconds: 1), () {
         Navigator.pop(context, true);
@@ -201,13 +203,13 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
             TextField(
               controller: _answerController,
               decoration: const InputDecoration(
-                labelText: 'Enter your answer',
+                labelText: 'Enter your answer 📝',
               ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _submitAnswer,
-              child: const Text('Submit'),
+              child: const Text('Submit 🐾'),
             ),
           ],
         ),
@@ -228,7 +230,7 @@ class LsuGalleryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('LSU Gallery')),
+      appBar: AppBar(title: const Text('LSU Gallery 🐯')),
       body: GridView.builder(
         padding: const EdgeInsets.all(8.0),
         itemCount: imageUrls.length,
