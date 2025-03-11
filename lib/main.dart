@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'PFT Scavenger Hunt',
       theme: ThemeData(
         primarySwatch: Colors.purple,
-        scaffoldBackgroundColor: Colors.amber[50], 
+        scaffoldBackgroundColor: Colors.amber[50],
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.purple,
           titleTextStyle: TextStyle(
@@ -27,15 +28,6 @@ class MyApp extends StatelessWidget {
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: Colors.purple,
         ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-            textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ),
         useMaterial3: true,
       ),
       home: const HomePage(),
@@ -45,28 +37,65 @@ class MyApp extends StatelessWidget {
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-  
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final Set<int> completedTasks = {};
+  Set<int> completedTasks = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCompletedTasks();
+  }
+
+  // Load saved completed tasks from local storage
+  Future<void> _loadCompletedTasks() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? savedTasks = prefs.getStringList('completedTasks');
+    if (savedTasks != null) {
+      setState(() {
+        completedTasks = savedTasks.map((e) => int.parse(e)).toSet();
+      });
+    }
+  }
+
+  // Save completed tasks in local storage
+  Future<void> _saveCompletedTasks() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('completedTasks', completedTasks.map((e) => e.toString()).toList());
+  }
 
   void markTaskCompleted(int taskId) {
     setState(() {
       completedTasks.add(taskId);
     });
+    _saveCompletedTasks();
   }
 
   @override
   Widget build(BuildContext context) {
     int totalTasks = tasks.length;
     int completedCount = completedTasks.length;
+    bool allCompleted = completedCount == totalTasks;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('PFT Scavenger Hunt'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.image),
+            tooltip: 'LSU Gallery',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LsuGalleryPage()),
+              );
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -77,6 +106,15 @@ class _HomePageState extends State<HomePage> {
               style: Theme.of(context).textTheme.headlineSmall,
             ),
           ),
+          if (allCompleted)
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                '🎉 Congratulations! You have completed all tasks! 🎉',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green),
+                textAlign: TextAlign.center,
+              ),
+            ),
           const Divider(),
           Expanded(
             child: ListView.builder(
@@ -84,21 +122,27 @@ class _HomePageState extends State<HomePage> {
               itemBuilder: (context, index) {
                 Task task = tasks[index];
                 bool isCompleted = completedTasks.contains(task.id);
-                return ListTile(
-                  title: Text(task.description),
-                  trailing: isCompleted
-                      ? const Icon(Icons.check_circle, color: Colors.green)
-                      : const Icon(Icons.radio_button_unchecked),
-                  onTap: () async {
-                    if (isCompleted) return;
-                    final result = await Navigator.push<bool>(
-                      context,
-                      MaterialPageRoute(builder: (context) => TaskDetailPage(task: task)),
-                    );
-                    if (result == true) {
-                      markTaskCompleted(task.id);
-                    }
-                  },
+
+                return AnimatedOpacity(
+                  duration: const Duration(milliseconds: 500),
+                  opacity: isCompleted ? 0.5 : 1.0,
+                  child: ListTile(
+                    title: Text(task.description),
+                    trailing: Icon(
+                      isCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
+                      color: isCompleted ? Colors.green : Colors.grey,
+                    ),
+                    onTap: () async {
+                      if (isCompleted) return;
+                      final result = await Navigator.push<bool>(
+                        context,
+                        MaterialPageRoute(builder: (context) => TaskDetailPage(task: task)),
+                      );
+                      if (result == true) {
+                        markTaskCompleted(task.id);
+                      }
+                    },
+                  ),
                 );
               },
             ),
@@ -124,14 +168,14 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     String answer = _answerController.text.trim().toLowerCase();
     if (answer == widget.task.correctAnswer.toLowerCase()) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Correct!', style: TextStyle(color: Colors.white)), backgroundColor: Colors.green),
+        const SnackBar(content: Text('Correct!'), backgroundColor: Colors.green),
       );
       Future.delayed(const Duration(seconds: 1), () {
         Navigator.pop(context, true);
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Incorrect. Try again.', style: TextStyle(color: Colors.white)), backgroundColor: Colors.red),
+        const SnackBar(content: Text('Incorrect. Try again.'), backgroundColor: Colors.red),
       );
     }
   }
@@ -146,7 +190,13 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text(widget.task.description, style: const TextStyle(fontSize: 18)),
+            Hero(
+              tag: widget.task.id,
+              child: Material(
+                type: MaterialType.transparency,
+                child: Text(widget.task.description, style: const TextStyle(fontSize: 18)),
+              ),
+            ),
             const SizedBox(height: 20),
             TextField(
               controller: _answerController,
@@ -207,11 +257,7 @@ class Task {
   final String description;
   final String correctAnswer;
 
-  Task({
-    required this.id,
-    required this.description,
-    required this.correctAnswer,
-  });
+  Task({required this.id, required this.description, required this.correctAnswer});
 }
 
 final List<Task> tasks = [
