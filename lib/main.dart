@@ -6,7 +6,7 @@ void main() {
 
 // Entry point for the app.
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +29,9 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.purple,
         ),
         textTheme: Theme.of(context).textTheme.apply(
-          bodyColor: Colors.purple,
-          displayColor: Colors.purple,
-        ),
+              bodyColor: Colors.purple,
+              displayColor: Colors.purple,
+            ),
         useMaterial3: true,
       ),
       home: const HomePage(),
@@ -64,11 +64,21 @@ final List<Task> tasks = [
     description: 'Find the number of computers in the lab near the Cambre Atrium.',
     correctAnswer: 'correct answer here', // Update when ready.
   ),
-  // Additional tasks can be added here.
+  // Additional questions.
+  Task(
+    id: 3,
+    description: 'When was LSU established?',
+    correctAnswer: '1853', // Replace with the correct answer.
+  ),
+  Task(
+    id: 4,
+    description: 'Locate the LSU mascot on campus.',
+    correctAnswer: 'Tiger', // Replace with the correct answer.
+  ),
 ];
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
   
   @override
   State<HomePage> createState() => _HomePageState();
@@ -92,6 +102,18 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('PFT Scavenger Hunt'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.image),
+            tooltip: 'LSU Gallery',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LsuGalleryPage()),
+              );
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -142,13 +164,24 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      // Extra floating action button to view LSU images.
+      floatingActionButton: FloatingActionButton(
+        tooltip: 'LSU Gallery',
+        child: const Icon(Icons.photo_library),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LsuGalleryPage()),
+          );
+        },
+      ),
     );
   }
 }
 
 class TaskDetailPage extends StatefulWidget {
   final Task task;
-  const TaskDetailPage({Key? key, required this.task}) : super(key: key);
+  const TaskDetailPage({super.key, required this.task});
 
   @override
   State<TaskDetailPage> createState() => _TaskDetailPageState();
@@ -157,19 +190,23 @@ class TaskDetailPage extends StatefulWidget {
 class _TaskDetailPageState extends State<TaskDetailPage> {
   final TextEditingController _answerController = TextEditingController();
   String feedback = '';
+  bool showThumbsUp = false;
 
   void _submitAnswer() {
     String answer = _answerController.text.trim();
     if (answer == widget.task.correctAnswer) {
       setState(() {
         feedback = 'Correct!';
+        showThumbsUp = true;
       });
+      // Show the thumbs up for 1 second before returning.
       Future.delayed(const Duration(seconds: 1), () {
         Navigator.pop(context, true);
       });
     } else {
       setState(() {
         feedback = 'Incorrect. Try again.';
+        showThumbsUp = false;
       });
     }
   }
@@ -198,8 +235,22 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               child: const Text('Submit'),
             ),
             const SizedBox(height: 20),
-            Text(feedback,
-                style: const TextStyle(fontSize: 16, color: Colors.red)),
+            // Display feedback and a funny thumbs up if correct.
+            if (feedback.isNotEmpty)
+              Column(
+                children: [
+                  Text(feedback,
+                      style: const TextStyle(fontSize: 16, color: Colors.red)),
+                  if (showThumbsUp)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Image.network(
+                        'https://media.giphy.com/media/OkJat1YNdoD3W/giphy.gif',
+                        height: 100,
+                      ),
+                    ),
+                ],
+              ),
             const SizedBox(height: 20),
             // Extra back button for improved navigation.
             ElevatedButton.icon(
@@ -211,6 +262,42 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// New page to display LSU images using network images.
+class LsuGalleryPage extends StatelessWidget {
+  const LsuGalleryPage({super.key});
+
+  // Replace these URLs with any preferred network images.
+  final List<String> imageUrls = const [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/LSU_Athletic_logo.svg/1024px-LSU_Athletic_logo.svg.png',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/LSU_Logo.svg/1200px-LSU_Logo.svg.png',
+    'https://www.lsu.edu/communications/news/2020/06/03/lsu-campus.jpg',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('LSU Gallery'),
+      ),
+      body: GridView.builder(
+        padding: const EdgeInsets.all(8.0),
+        itemCount: imageUrls.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, // two columns
+          crossAxisSpacing: 8.0,
+          mainAxisSpacing: 8.0,
+        ),
+        itemBuilder: (context, index) {
+          return Image.network(
+            imageUrls[index],
+            fit: BoxFit.cover,
+          );
+        },
       ),
     );
   }
