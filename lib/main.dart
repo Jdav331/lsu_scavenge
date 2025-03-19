@@ -52,7 +52,8 @@ final List<Task> tasks = [
   ),
   Task(
     id: 2,
-    description: 'Find the number of computers in the lab near the Cambre Atrium.',
+    description:
+        'Find the number of computers in the lab near the Cambre Atrium.',
     correctAnswer: '35', // Update when ready.
   ),
   Task(
@@ -340,7 +341,8 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: FutureBuilder<String?>(
-        future: SharedPreferences.getInstance().then((prefs) => prefs.getString('userProfile')),
+        future: SharedPreferences.getInstance()
+            .then((prefs) => prefs.getString('userProfile')),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -410,56 +412,62 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: _selectedIndex == 0 ? Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Progress: ${completedTasks.length} / ${tasks.length} tasks completed',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-          ),
-          const Divider(),
-          Expanded(
-            child: ListView.builder(
-              itemCount: tasks.length,
-              itemBuilder: (context, index) {
-                Task task = tasks[index];
-                bool isCompleted = completedTasks.contains(task.id);
-                return ListTile(
-                  title: Text(task.description),
-                  trailing: isCompleted
-                      ? const Icon(Icons.check, color: Colors.green)
-                      : null,
-                  onTap: () async {
-                    if (isCompleted) return;
-                    final result = await Navigator.push<bool>(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            TaskDetailPage(task: task),
-                        transitionsBuilder:
-                            (context, animation, secondaryAnimation, child) {
-                          return FadeTransition(
-                            opacity: animation,
-                            child: child,
+      body: _selectedIndex == 0
+          ? Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Progress: ${completedTasks.length} / ${tasks.length} tasks completed',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                ),
+                const Divider(),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: tasks.length,
+                    itemBuilder: (context, index) {
+                      Task task = tasks[index];
+                      bool isCompleted = completedTasks.contains(task.id);
+                      return ListTile(
+                        title: Text(task.description),
+                        trailing: isCompleted
+                            ? const Icon(Icons.check, color: Colors.green)
+                            : null,
+                        onTap: () async {
+                          if (isCompleted) return;
+                          final result = await Navigator.push<bool>(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      TaskDetailPage(task: task),
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                );
+                              },
+                              transitionDuration:
+                                  const Duration(milliseconds: 500),
+                            ),
                           );
+                          if (result == true) {
+                            markTaskCompleted(task.id);
+                          }
                         },
-                        transitionDuration: const Duration(milliseconds: 500),
-                      ),
-                    );
-                    if (result == true) {
-                      markTaskCompleted(task.id);
-                    }
-                  },
-                );
-              },
-            ),
-          ),
-        ],
-      ) : _selectedIndex == 1 ? const Center(
-        child: Text('Map View Coming Soon!'),
-      ) : ProfilePage(userProfile: widget.userProfile),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            )
+          : _selectedIndex == 1
+              ? const Center(
+                  child: Text('Map View Coming Soon!'),
+                )
+              : ProfilePage(userProfile: widget.userProfile),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
