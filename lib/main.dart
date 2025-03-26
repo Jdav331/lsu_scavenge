@@ -38,11 +38,13 @@ class Task {
   final int id;
   final String description;
   final String correctAnswer;
+  final String hint; // New field for the hint
 
   Task({
     required this.id,
     required this.description,
     required this.correctAnswer,
+    required this.hint,
   });
 }
 
@@ -51,49 +53,64 @@ final List<Task> tasks = [
   Task(
       id: 1,
       description: 'Go to room 1200 and count the number of chairs.',
-      correctAnswer: '120'),
+      correctAnswer: '120',
+      hint: 'Look near the entrance to see a clear view of all chairs.'),
   Task(
       id: 2,
       description:
           'Find the number of computers in the lab near the Cambre Atrium.',
-      correctAnswer: '35'),
-  Task(id: 3, description: 'When was LSU established?', correctAnswer: '1853'),
+      correctAnswer: '35',
+      hint: 'Check the lab’s main area where the computers are set up.'),
+  Task(
+      id: 3,
+      description: 'When was LSU established?',
+      correctAnswer: '1853',
+      hint: 'Consider the mid-19th century context for LSU’s founding.'),
   Task(
       id: 4,
       description: 'Locate the LSU mascot on campus.',
-      correctAnswer: 'Tiger'),
+      correctAnswer: 'Tiger',
+      hint: 'Search around the main stadium entrance for the mascot display.'),
   Task(
       id: 5,
       description: 'Placeholder Task 1: Sample description here.',
-      correctAnswer: 'Answer1'),
+      correctAnswer: 'Answer1',
+      hint: 'Try to think logically about what the task is asking.'),
   Task(
       id: 6,
       description: 'Placeholder Task 2: Sample description here.',
-      correctAnswer: 'Answer2'),
+      correctAnswer: 'Answer2',
+      hint: 'Re-read the description carefully for any clues.'),
   Task(
       id: 7,
       description: 'Placeholder Task 3: Sample description here.',
-      correctAnswer: 'Answer3'),
+      correctAnswer: 'Answer3',
+      hint: 'Sometimes the answer is hidden in plain sight.'),
   Task(
       id: 8,
       description: 'Placeholder Task 4: Sample description here.',
-      correctAnswer: 'Answer4'),
+      correctAnswer: 'Answer4',
+      hint: 'Look for patterns or familiar hints in the wording.'),
   Task(
       id: 9,
       description: 'Placeholder Task 5: Sample description here.',
-      correctAnswer: 'Answer5'),
+      correctAnswer: 'Answer5',
+      hint: 'Break down the task into smaller parts to see the answer.'),
   Task(
       id: 10,
       description: 'Placeholder Task 6: Sample description here.',
-      correctAnswer: 'Answer6'),
+      correctAnswer: 'Answer6',
+      hint: 'Take a step back and re-read the question carefully.'),
   Task(
       id: 11,
       description: 'Placeholder Task 7: Sample description here.',
-      correctAnswer: 'Answer7'),
+      correctAnswer: 'Answer7',
+      hint: 'Maybe the answer is simpler than it appears.'),
   Task(
       id: 12,
       description: 'Placeholder Task 8: Sample description here.',
-      correctAnswer: 'Answer8'),
+      correctAnswer: 'Answer8',
+      hint: 'Consider any details you might have overlooked.'),
 ];
 
 // ========== MAP PAGE ==========
@@ -116,7 +133,7 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('PFT Building Map')),
+      // AppBar removed
       body: Column(
         children: [
           const SizedBox(height: 16),
@@ -193,10 +210,27 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     }
   }
 
+  void _showHint() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Hint'),
+          content: Text(widget.task.hint),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Close'))
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Task Detail')),
+      // AppBar removed
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -208,8 +242,15 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               decoration: const InputDecoration(labelText: 'Enter your answer'),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-                onPressed: _submitAnswer, child: const Text('Submit')),
+            Row(
+              children: [
+                ElevatedButton(
+                    onPressed: _submitAnswer, child: const Text('Submit')),
+                const SizedBox(width: 16),
+                ElevatedButton(
+                    onPressed: _showHint, child: const Text('Show Hint')),
+              ],
+            ),
             const SizedBox(height: 20),
             if (feedback.isNotEmpty)
               Column(
@@ -252,7 +293,7 @@ class LsuGalleryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('LSU Gallery')),
+      // AppBar removed
       body: GridView.builder(
         padding: const EdgeInsets.all(8.0),
         itemCount: imageUrls.length,
@@ -303,7 +344,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Welcome to PFT Scavenger Hunt')),
+      // AppBar removed
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -394,15 +435,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'PFT Scavenger Hunt',
-      theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true),
+      theme: ThemeData.dark().copyWith(
+        // Set a dark theme with a custom scaffold background.
+        scaffoldBackgroundColor: const Color(0xFF461D7C),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+          brightness: Brightness.dark,
+        ),
+        useMaterial3: true,
+      ),
       home: FutureBuilder<String?>(
         future: SharedPreferences.getInstance()
             .then((prefs) => prefs.getString('userProfile')),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting)
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
+          }
           if (snapshot.hasData && snapshot.data != null) {
             final decoded = json.decode(snapshot.data!);
             final userProfile = UserProfile.fromJson(decoded);
@@ -445,72 +493,57 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget currentPage = _selectedIndex == 0
-        ? Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                    'Progress: ${completedTasks.length} / ${tasks.length} tasks completed',
-                    style: Theme.of(context).textTheme.headlineSmall),
-              ),
-              const Divider(),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: tasks.length,
-                  itemBuilder: (context, index) {
-                    Task task = tasks[index];
-                    bool isCompleted = completedTasks.contains(task.id);
-                    return ListTile(
-                      title: Text(task.description),
-                      trailing: isCompleted
-                          ? const Icon(Icons.check, color: Colors.green)
-                          : null,
-                      onTap: () async {
-                        if (isCompleted) return;
-                        final result = await Navigator.push<bool>(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) =>
-                                    TaskDetailPage(task: task),
-                            transitionsBuilder: (context, animation,
-                                    secondaryAnimation, child) =>
-                                FadeTransition(
-                                    opacity: animation, child: child),
-                            transitionDuration:
-                                const Duration(milliseconds: 500),
-                          ),
-                        );
-                        if (result == true) markTaskCompleted(task.id);
-                      },
+    Widget currentPage;
+    if (_selectedIndex == 0) {
+      currentPage = Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+                'Progress: ${completedTasks.length} / ${tasks.length} tasks completed',
+                style: Theme.of(context).textTheme.headlineSmall),
+          ),
+          const Divider(),
+          Expanded(
+            child: ListView.builder(
+              itemCount: tasks.length,
+              itemBuilder: (context, index) {
+                Task task = tasks[index];
+                bool isCompleted = completedTasks.contains(task.id);
+                return ListTile(
+                  title: Text(task.description),
+                  trailing: isCompleted
+                      ? const Icon(Icons.check, color: Colors.green)
+                      : null,
+                  onTap: () async {
+                    if (isCompleted) return;
+                    final result = await Navigator.push<bool>(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            TaskDetailPage(task: task),
+                        transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) =>
+                            FadeTransition(opacity: animation, child: child),
+                        transitionDuration: const Duration(milliseconds: 500),
+                      ),
                     );
+                    if (result == true) markTaskCompleted(task.id);
                   },
-                ),
-              ),
-            ],
-          )
-        : _selectedIndex == 1
-            ? const MapPage()
-            : ProfilePage(userProfile: widget.userProfile);
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.image),
-            tooltip: 'LSU Gallery',
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const LsuGalleryPage()));
-            },
+                );
+              },
+            ),
           ),
         ],
-      ),
+      );
+    } else if (_selectedIndex == 1) {
+      currentPage = const MapPage();
+    } else {
+      currentPage = ProfilePage(userProfile: widget.userProfile);
+    }
+
+    return Scaffold(
+      // AppBar removed
       body: currentPage,
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
