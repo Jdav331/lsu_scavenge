@@ -73,14 +73,14 @@ final List<Task> tasks = [
       hint: 'Search around the main stadium entrance for the mascot display.'),
   Task(
       id: 5,
-      description: 'Placeholder Task 1: Sample description here.',
-      correctAnswer: 'Answer1',
-      hint: 'Try to think logically about what the task is asking.'),
+      description: 'How many tables are in the main atrium? ',
+      correctAnswer: '7',
+      hint: 'Less than 10!'),
   Task(
       id: 6,
-      description: 'Placeholder Task 2: Sample description here.',
-      correctAnswer: 'Answer2',
-      hint: 'Re-read the description carefully for any clues.'),
+      description: 'How many floors are in PFT?',
+      correctAnswer: '3',
+      hint: 'Check the directory near the stairs.'),
   Task(
       id: 7,
       description: 'Placeholder Task 3: Sample description here.',
