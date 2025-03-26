@@ -133,7 +133,6 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // AppBar removed
       body: SafeArea(
         child: Column(
           children: [
@@ -232,7 +231,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // AppBar removed
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -243,6 +241,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               const SizedBox(height: 20),
               TextField(
                 controller: _answerController,
+                style: const TextStyle(
+                    color: Color(0xFF461D7C)), // typed text in purple
                 decoration:
                     const InputDecoration(labelText: 'Enter your answer'),
               ),
@@ -300,7 +300,6 @@ class LsuGalleryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // AppBar removed
       body: SafeArea(
         child: GridView.builder(
           padding: const EdgeInsets.all(8.0),
@@ -353,7 +352,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // AppBar removed
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -372,8 +370,8 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     TextFormField(
                       controller: _nameController,
-                      // Added style for typed text to be purple.
-                      style: const TextStyle(color: Color(0xFF461D7C)),
+                      style: const TextStyle(
+                          color: Color(0xFF461D7C)), // typed text in purple
                       decoration: const InputDecoration(
                           labelText: 'Name', border: OutlineInputBorder()),
                       validator: (value) => value == null || value.isEmpty
@@ -383,8 +381,8 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _emailController,
-                      // Added style for typed text to be purple.
-                      style: const TextStyle(color: Color(0xFF461D7C)),
+                      style: const TextStyle(
+                          color: Color(0xFF461D7C)), // typed text in purple
                       decoration: const InputDecoration(
                           labelText: 'Email', border: OutlineInputBorder()),
                       validator: (value) {
@@ -467,26 +465,28 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'PFT Scavenger Hunt',
-      theme: ThemeData.dark().copyWith(
-        // Set a dark theme with a custom scaffold background.
+      theme: ThemeData(
+        brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF461D7C),
+        fontFamily: 'ProximaNova',
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.deepPurple,
           brightness: Brightness.dark,
         ),
-        // Elevated button theme: white background with purple text.
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.white,
             foregroundColor: const Color(0xFF461D7C),
           ),
         ),
-        // Input decoration theme for text fields.
+        // Input decoration: white background for the text field,
+        // but label and hint in contrasting colors.
         inputDecorationTheme: const InputDecorationTheme(
           filled: true,
           fillColor: Colors.white,
           border: OutlineInputBorder(),
           labelStyle: TextStyle(color: Colors.black),
+          hintStyle: TextStyle(color: Colors.grey),
         ),
         useMaterial3: true,
       ),
@@ -590,7 +590,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     return Scaffold(
-      // AppBar removed
       body: SafeArea(
         child: currentPage,
       ),
