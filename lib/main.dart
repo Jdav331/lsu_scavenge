@@ -134,45 +134,47 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // AppBar removed
-      body: Column(
-        children: [
-          const SizedBox(height: 16),
-          ToggleButtons(
-            isSelected: [
-              _selectedFloor == 1,
-              _selectedFloor == 2,
-              _selectedFloor == 3,
-            ],
-            onPressed: (index) {
-              setState(() {
-                _selectedFloor = index + 1;
-              });
-            },
-            children: const [
-              Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text('Floor 1')),
-              Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text('Floor 2')),
-              Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text('Floor 3')),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Expanded(
-            child: InteractiveViewer(
-              panEnabled: true,
-              minScale: 0.5,
-              maxScale: 4.0,
-              child: Image.asset(
-                floorImages[_selectedFloor]!,
-                fit: BoxFit.contain,
+      body: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 16),
+            ToggleButtons(
+              isSelected: [
+                _selectedFloor == 1,
+                _selectedFloor == 2,
+                _selectedFloor == 3,
+              ],
+              onPressed: (index) {
+                setState(() {
+                  _selectedFloor = index + 1;
+                });
+              },
+              children: const [
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text('Floor 1')),
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text('Floor 2')),
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text('Floor 3')),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: InteractiveViewer(
+                panEnabled: true,
+                minScale: 0.5,
+                maxScale: 4.0,
+                child: Image.asset(
+                  floorImages[_selectedFloor]!,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -231,49 +233,54 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // AppBar removed
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Text(widget.task.description, style: const TextStyle(fontSize: 18)),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _answerController,
-              decoration: const InputDecoration(labelText: 'Enter your answer'),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                ElevatedButton(
-                    onPressed: _submitAnswer, child: const Text('Submit')),
-                const SizedBox(width: 16),
-                ElevatedButton(
-                    onPressed: _showHint, child: const Text('Show Hint')),
-              ],
-            ),
-            const SizedBox(height: 20),
-            if (feedback.isNotEmpty)
-              Column(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Text(widget.task.description,
+                  style: const TextStyle(fontSize: 18)),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _answerController,
+                decoration:
+                    const InputDecoration(labelText: 'Enter your answer'),
+              ),
+              const SizedBox(height: 20),
+              Row(
                 children: [
-                  Text(feedback,
-                      style: const TextStyle(fontSize: 16, color: Colors.red)),
-                  if (showThumbsUp)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Image.network(
-                        'https://media.giphy.com/media/OkJat1YNdoD3W/giphy.gif',
-                        height: 100,
-                      ),
-                    ),
+                  ElevatedButton(
+                      onPressed: _submitAnswer, child: const Text('Submit')),
+                  const SizedBox(width: 16),
+                  ElevatedButton(
+                      onPressed: _showHint, child: const Text('Show Hint')),
                 ],
               ),
-            const SizedBox(height: 20),
-            ElevatedButton.icon(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.arrow_back),
-              label: const Text('Back'),
-            ),
-          ],
+              const SizedBox(height: 20),
+              if (feedback.isNotEmpty)
+                Column(
+                  children: [
+                    Text(feedback,
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.red)),
+                    if (showThumbsUp)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Image.network(
+                          'https://media.giphy.com/media/OkJat1YNdoD3W/giphy.gif',
+                          height: 100,
+                        ),
+                      ),
+                  ],
+                ),
+              const SizedBox(height: 20),
+              ElevatedButton.icon(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.arrow_back),
+                label: const Text('Back'),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -294,14 +301,16 @@ class LsuGalleryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       // AppBar removed
-      body: GridView.builder(
-        padding: const EdgeInsets.all(8.0),
-        itemCount: imageUrls.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, crossAxisSpacing: 8.0, mainAxisSpacing: 8.0),
-        itemBuilder: (context, index) {
-          return Image.network(imageUrls[index], fit: BoxFit.cover);
-        },
+      body: SafeArea(
+        child: GridView.builder(
+          padding: const EdgeInsets.all(8.0),
+          itemCount: imageUrls.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, crossAxisSpacing: 8.0, mainAxisSpacing: 8.0),
+          itemBuilder: (context, index) {
+            return Image.network(imageUrls[index], fit: BoxFit.cover);
+          },
+        ),
       ),
     );
   }
@@ -345,37 +354,56 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // AppBar removed
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                    labelText: 'Name', border: OutlineInputBorder()),
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Please enter your name'
-                    : null,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                    labelText: 'Email', border: OutlineInputBorder()),
-                validator: (value) {
-                  if (value == null || value.isEmpty)
-                    return 'Please enter your email';
-                  if (!value.contains('@')) return 'Please enter a valid email';
-                  return null;
-                },
+              // LSULogo.png added at the top
+              Image.asset(
+                'assets/LSULogo.png',
+                height: 150, // adjust the height as needed
               ),
               const SizedBox(height: 24),
-              ElevatedButton(
-                  onPressed: _saveUserProfile,
-                  child: const Text('Start Scavenger Hunt')),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _nameController,
+                      // Added style for typed text to be purple.
+                      style: const TextStyle(color: Color(0xFF461D7C)),
+                      decoration: const InputDecoration(
+                          labelText: 'Name', border: OutlineInputBorder()),
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Please enter your name'
+                          : null,
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _emailController,
+                      // Added style for typed text to be purple.
+                      style: const TextStyle(color: Color(0xFF461D7C)),
+                      decoration: const InputDecoration(
+                          labelText: 'Email', border: OutlineInputBorder()),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        if (!value.contains('@')) {
+                          return 'Please enter a valid email';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton(
+                        onPressed: _saveUserProfile,
+                        child: const Text('Start Scavenger Hunt')),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -392,36 +420,40 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Profile Information',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 20),
-          ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('Name'),
-              subtitle: Text(userProfile.name)),
-          ListTile(
-              leading: const Icon(Icons.email),
-              title: const Text('Email'),
-              subtitle: Text(userProfile.email)),
-          const SizedBox(height: 20),
-          ElevatedButton.icon(
-            onPressed: () async {
-              final prefs = await SharedPreferences.getInstance();
-              await prefs.remove('userProfile');
-              if (context.mounted) {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()));
-              }
-            },
-            icon: const Icon(Icons.logout),
-            label: const Text('Logout'),
-          ),
-        ],
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Profile Information',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 20),
+            ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text('Name'),
+                subtitle: Text(userProfile.name)),
+            ListTile(
+                leading: const Icon(Icons.email),
+                title: const Text('Email'),
+                subtitle: Text(userProfile.email)),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: () async {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.remove('userProfile');
+                if (context.mounted) {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()));
+                }
+              },
+              icon: const Icon(Icons.logout),
+              label: const Text('Logout'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -441,6 +473,20 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.deepPurple,
           brightness: Brightness.dark,
+        ),
+        // Elevated button theme: white background with purple text.
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            foregroundColor: const Color(0xFF461D7C),
+          ),
+        ),
+        // Input decoration theme for text fields.
+        inputDecorationTheme: const InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(),
+          labelStyle: TextStyle(color: Colors.black),
         ),
         useMaterial3: true,
       ),
@@ -500,8 +546,9 @@ class _MyHomePageState extends State<MyHomePage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-                'Progress: ${completedTasks.length} / ${tasks.length} tasks completed',
-                style: Theme.of(context).textTheme.headlineSmall),
+              'Progress: ${completedTasks.length} / ${tasks.length} tasks completed',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
           ),
           const Divider(),
           Expanded(
@@ -544,7 +591,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       // AppBar removed
-      body: currentPage,
+      body: SafeArea(
+        child: currentPage,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
