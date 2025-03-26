@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.remove('userProfile'); // Remove the invalid one
   runApp(const MyApp());
 }
 
@@ -207,7 +211,8 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text,
         isLoggedIn: true,
       );
-      await prefs.setString('userProfile', userProfile.toJson().toString());
+      await prefs.setString('userProfile', json.encode(userProfile.toJson()));
+
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -348,9 +353,9 @@ class MyApp extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasData && snapshot.data != null) {
-            final userProfile = UserProfile.fromJson(
-              Map<String, dynamic>.from(snapshot.data as Map),
-            );
+            // Decode the JSON string into a Map
+            final decoded = json.decode(snapshot.data!);
+            final userProfile = UserProfile.fromJson(decoded);
             return MyHomePage(
               title: 'PFT Scavenger Hunt',
               userProfile: userProfile,
