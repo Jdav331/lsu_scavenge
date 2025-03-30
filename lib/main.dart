@@ -123,27 +123,30 @@ class _HomePageState extends State<HomePage> {
                 Task task = tasks[index];
                 bool isCompleted = completedTasks.contains(task.id);
 
-                return AnimatedOpacity(
-                  duration: const Duration(milliseconds: 500),
-                  opacity: isCompleted ? 0.5 : 1.0,
-                  child: ListTile(
-                    title: Text(task.description),
-                    trailing: Icon(
-                      isCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
-                      color: isCompleted ? Colors.green : Colors.grey,
-                    ),
-                    onTap: () async {
-                      if (isCompleted) return;
-                      final result = await Navigator.push<bool>(
-                        context,
-                        MaterialPageRoute(builder: (context) => TaskDetailPage(task: task)),
-                      );
-                      if (result == true) {
-                        markTaskCompleted(task.id);
-                      }
-                    },
-                  ),
-                );
+                return GestureDetector(
+  onTap: () async {
+    if (isCompleted) return;
+    final result = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(builder: (context) => TaskDetailPage(task: task)),
+    );
+    if (result == true) {
+      markTaskCompleted(task.id);
+    }
+  },
+  child: AnimatedOpacity(
+    duration: const Duration(milliseconds: 500),
+    opacity: isCompleted ? 0.5 : 1.0,
+    child: ListTile(
+      title: Text(task.description),
+      trailing: Icon(
+        isCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
+        color: isCompleted ? Colors.green : Colors.grey,
+      ),
+    ),
+  ),
+);
+
               },
             ),
           ),
