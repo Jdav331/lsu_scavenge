@@ -132,6 +132,87 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
+=======
+    return MaterialApp(
+      title: 'PFT Scavenger Hunt',
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+        scaffoldBackgroundColor: Colors.amber[50],
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.purple,
+          titleTextStyle: TextStyle(
+            color: Colors.amber,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+          iconTheme: IconThemeData(color: Colors.amber),
+        ),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Colors.purple,
+        ),
+        useMaterial3: true,
+      ),
+      home: const HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  Set<int> completedTasks = {};
+  late ConfettiController _confettiController;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCompletedTasks();
+    _confettiController = ConfettiController(duration: const Duration(seconds: 2));
+  }
+
+  // Load saved completed tasks from local storage
+  Future<void> _loadCompletedTasks() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? savedTasks = prefs.getStringList('completedTasks');
+    if (savedTasks != null) {
+      setState(() {
+        completedTasks = savedTasks.map((e) => int.parse(e)).toSet();
+      });
+    }
+    //confetti
+    @override
+    void dispose() {
+      _confettiController.dispose();
+      super.dispose();
+}
+  }
+
+  // Save completed tasks in local storage
+  Future<void> _saveCompletedTasks() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('completedTasks', completedTasks.map((e) => e.toString()).toList());
+  }
+
+  void markTaskCompleted(int taskId) {
+    setState(() {
+      completedTasks.add(taskId);
+    });
+    _saveCompletedTasks();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    int totalTasks = tasks.length;
+    int completedCount = completedTasks.length;
+    bool allCompleted = completedCount == totalTasks;
+
+>>>>>>> 3ad83b7 (edited the program to incorperate the confetti)
     return Scaffold(
       body: SafeArea(
         child: Column(
