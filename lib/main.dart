@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:confetti/confetti.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -44,11 +46,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Set<int> completedTasks = {};
+  late ConfettiController _confettiController;
 
   @override
   void initState() {
     super.initState();
     _loadCompletedTasks();
+    _confettiController = ConfettiController(duration: const Duration(seconds: 2));
   }
 
   // Load saved completed tasks from local storage
@@ -60,6 +64,11 @@ class _HomePageState extends State<HomePage> {
         completedTasks = savedTasks.map((e) => int.parse(e)).toSet();
       });
     }
+    @override
+    void dispose() {
+      _confettiController.dispose();
+      super.dispose();
+}
   }
 
   // Save completed tasks in local storage
@@ -123,7 +132,7 @@ class _HomePageState extends State<HomePage> {
                 Task task = tasks[index];
                 bool isCompleted = completedTasks.contains(task.id);
 
-                return GestureDetector(
+return GestureDetector(
   onTap: () async {
     if (isCompleted) return;
     final result = await Navigator.push<bool>(
