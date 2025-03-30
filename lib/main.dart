@@ -65,6 +65,7 @@ class _HomePageState extends State<HomePage> {
         completedTasks = savedTasks.map((e) => int.parse(e)).toSet();
       });
     }
+    //confetti
     @override
     void dispose() {
       _confettiController.dispose();
