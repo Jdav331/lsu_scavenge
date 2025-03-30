@@ -601,7 +601,7 @@ class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
-
+  
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   final Set<int> completedTasks = {};
@@ -669,7 +669,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       currentPage = ProfilePage(userProfile: widget.userProfile);
     }
-  
+    
     return Scaffold(
       body: SafeArea(
         child: currentPage,
