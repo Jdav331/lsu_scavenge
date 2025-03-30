@@ -8,6 +8,7 @@ void main() {
 }
 
 // Entry point for the app.
+//
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
