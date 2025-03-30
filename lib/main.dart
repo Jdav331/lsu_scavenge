@@ -267,4 +267,8 @@ final List<Task> tasks = [
   Task(id: 2, description: 'Find the number of computers in the lab near the Cambre Atrium.', correctAnswer: '20'),
   Task(id: 3, description: 'When was LSU established?', correctAnswer: '1853'),
   Task(id: 4, description: 'Locate the LSU mascot on campus.', correctAnswer: 'Tiger'),
+  Task(id: 5, description: 'How many floors does PFT have?', correctAnswer: '3'),
+  Task(id: 6, description: 'Name the café located inside PFT.', correctAnswer: 'Panera'),
+  Task(id: 7, description: 'What color is the statue in front of the engineering building?', correctAnswer: 'Bronze'),
+  Task(id: 8, description: 'Visit the third floor. What is located there?', correctAnswer: 'Offices'),
 ];
