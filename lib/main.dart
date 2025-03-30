@@ -669,7 +669,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       currentPage = ProfilePage(userProfile: widget.userProfile);
     }
-
+  
     return Scaffold(
       body: SafeArea(
         child: currentPage,
