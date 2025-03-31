@@ -299,11 +299,15 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-                ElevatedButton.icon(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back),
-          label: const Text('Back'),
-        ),
+ElevatedButton.icon(
+  onPressed: () {
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
+  },
+  icon: const Icon(Icons.arrow_back),
+  label: const Text('Back'),
+),
         ElevatedButton(onPressed: _submitAnswer, child: const Text('Submit')),
         ElevatedButton(onPressed: _showHint, child: const Text('Show Hint')),
       ],
