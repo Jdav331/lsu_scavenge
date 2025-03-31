@@ -221,21 +221,32 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   }
 
   void _showHint() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Hint'),
-          content: Text(widget.task.hint),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Close'))
-          ],
-        );
-      },
-    );
-  }
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Hint',
+          style: TextStyle(color: Color(0xFF461D7C), fontWeight: FontWeight.bold),
+        ),
+        content: Text(
+          widget.task.hint,
+          style: const TextStyle(color: Color(0xFF461D7C)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text(
+              'Close',
+              style: TextStyle(color: Color(0xFF461D7C), fontWeight: FontWeight.bold),
+            ),
+          )
+        ],
+      );
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -244,52 +255,61 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            children: [
-              Text(widget.task.description,
-                  style: const TextStyle(fontSize: 18)),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _answerController,
-                style: const TextStyle(
-                    color: Color(0xFF461D7C)), // typed text in purple
-                decoration:
-                    const InputDecoration(labelText: 'Enter your answer'),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  ElevatedButton(
-                      onPressed: _submitAnswer, child: const Text('Submit')),
-                  const SizedBox(width: 16),
-                  ElevatedButton(
-                      onPressed: _showHint, child: const Text('Show Hint')),
-                ],
-              ),
-              const SizedBox(height: 20),
-              if (feedback.isNotEmpty)
-                Column(
-                  children: [
-                    Text(feedback,
-                        style:
-                            const TextStyle(fontSize: 16, color: Colors.red)),
-                    if (showThumbsUp)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Image.network(
-                          'https://media.giphy.com/media/OkJat1YNdoD3W/giphy.gif',
-                          height: 100,
-                        ),
-                      ),
-                  ],
-                ),
-              const SizedBox(height: 20),
-              ElevatedButton.icon(
-                onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.arrow_back),
-                label: const Text('Back'),
-              ),
-            ],
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    const SizedBox(height: 16),
+    Text(
+      widget.task.description,
+      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    ),
+    const SizedBox(height: 20),
+    TextField(
+      controller: _answerController,
+      style: const TextStyle(color: Color(0xFF461D7C)),
+      decoration: const InputDecoration(labelText: 'Enter your answer'),
+    ),
+    const SizedBox(height: 20),
+    if (feedback.isNotEmpty)
+  Center(
+    child: Column(
+      children: [
+        Text(
+          feedback,
+          style: const TextStyle(fontSize: 16, color: Colors.red),
+        ),
+        if (showThumbsUp)
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Image.network(
+              'https://media.giphy.com/media/OkJat1YNdoD3W/giphy.gif',
+              height: 100,
+            ),
           ),
+      ],
+    ),
+  ),
+    const Spacer(), // Pushes the buttons & logo to the bottom
+    Center(
+      child: Image.asset(
+        'assets/LSULogo.png',
+        height: 80,
+      ),
+    ),
+    const SizedBox(height: 16),
+    Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+                ElevatedButton.icon(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back),
+          label: const Text('Back'),
+        ),
+        ElevatedButton(onPressed: _submitAnswer, child: const Text('Submit')),
+        ElevatedButton(onPressed: _showHint, child: const Text('Show Hint')),
+      ],
+    ),
+  ],
+),
         ),
       ),
     );
@@ -615,14 +635,14 @@ class _MyHomePageState extends State<MyHomePage> {
   unselectedItemColor: Color(0xFF461D7C), // LSU purple for unselected icons
   onTap: _onItemTapped,
 ),
-      floatingActionButton: FloatingActionButton(
-        tooltip: 'LSU Gallery',
-        child: const Icon(Icons.photo_library),
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const LsuGalleryPage()));
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   tooltip: 'LSU Gallery',
+      //   child: const Icon(Icons.photo_library),
+      //   onPressed: () {
+      //     Navigator.push(context,
+      //         MaterialPageRoute(builder: (context) => const LsuGalleryPage()));
+      //   },
+      // ),
     );
   }
 }
