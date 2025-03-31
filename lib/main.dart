@@ -74,8 +74,8 @@ final List<Task> tasks = [
   Task(
       id: 5,
       description: 'How many tables are in the main atrium? ',
-      correctAnswer: '7',
-      hint: 'Less than 10!'),
+      correctAnswer: '6',
+      hint: 'Less than 8!'),
   Task(
       id: 6,
       description: 'How many floors are in PFT?',
@@ -83,34 +83,34 @@ final List<Task> tasks = [
       hint: 'Check the directory near the stairs.'),
   Task(
       id: 7,
-      description: 'Placeholder Task 3: Sample description here.',
-      correctAnswer: 'Answer3',
-      hint: 'Sometimes the answer is hidden in plain sight.'),
+      description: 'What is the zone color of the east side section of PFT? ',
+      correctAnswer: 'yellow',
+      hint: 'Look for zone 2300!'),
   Task(
       id: 8,
-      description: 'Placeholder Task 4: Sample description here.',
-      correctAnswer: 'Answer4',
-      hint: 'Look for patterns or familiar hints in the wording.'),
+      description: 'How many big wooden stairs are in the capstone area? ',
+      correctAnswer: '11',
+      hint: 'Middle of the PMAC.'),
   Task(
       id: 9,
-      description: 'Placeholder Task 5: Sample description here.',
-      correctAnswer: 'Answer5',
-      hint: 'Break down the task into smaller parts to see the answer.'),
+      description: 'How many desks are inside of the glass room to the left of the capstone stairs?',
+      correctAnswer: '8',
+      hint: 'Each triangle counts as 1.'),
   Task(
       id: 10,
-      description: 'Placeholder Task 6: Sample description here.',
-      correctAnswer: 'Answer6',
-      hint: 'Take a step back and re-read the question carefully.'),
+      description: 'What shape are the lights hanging in the middle of PFT? ',
+      correctAnswer: 'Cylinder',
+      hint: '3d object.'),
   Task(
       id: 11,
-      description: 'Placeholder Task 7: Sample description here.',
-      correctAnswer: 'Answer7',
-      hint: 'Maybe the answer is simpler than it appears.'),
+      description: 'How many vending machines are in the building? ',
+      correctAnswer: '14',
+      hint: 'You may be missing the hall in the north east corner of the building.'),
   Task(
       id: 12,
-      description: 'Placeholder Task 8: Sample description here.',
-      correctAnswer: 'Answer8',
-      hint: 'Consider any details you might have overlooked.'),
+      description: 'What is the name of the food chain that is in PFT? ',
+      correctAnswer: 'Panera Bread',
+      hint: 'We are using the legal name :) 2 words.'),
 ];
 
 // ========== MAP PAGE ==========
@@ -122,7 +122,7 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  int _selectedFloor = 1;
+  final int _selectedFloor = 1;
 
   final Map<int, String> floorImages = {
     1: 'assets/pft-floor-one.png',
