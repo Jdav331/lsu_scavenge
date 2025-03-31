@@ -122,7 +122,7 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  final int _selectedFloor = 1;
+  int _selectedFloor = 1;
 
   final Map<int, String> floorImages = {
     1: 'assets/pft-floor-one.png',
@@ -132,115 +132,43 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-=======
-    return MaterialApp(
-      title: 'PFT Scavenger Hunt',
-      theme: ThemeData(
-        primarySwatch: Colors.purple,
-        scaffoldBackgroundColor: Colors.amber[50],
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.purple,
-          titleTextStyle: TextStyle(
-            color: Colors.amber,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-          iconTheme: IconThemeData(color: Colors.amber),
-        ),
-        floatingActionButtonTheme: const FloatingActionButtonThemeData(
-          backgroundColor: Colors.purple,
-        ),
-        useMaterial3: true,
-      ),
-      home: const HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  Set<int> completedTasks = {};
-  late ConfettiController _confettiController;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadCompletedTasks();
-    _confettiController = ConfettiController(duration: const Duration(seconds: 2));
-  }
-
-  // Load saved completed tasks from local storage
-  Future<void> _loadCompletedTasks() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? savedTasks = prefs.getStringList('completedTasks');
-    if (savedTasks != null) {
-      setState(() {
-        completedTasks = savedTasks.map((e) => int.parse(e)).toSet();
-      });
-    }
-    //confetti
-    @override
-    void dispose() {
-      _confettiController.dispose();
-      super.dispose();
-}
-  }
-
-  // Save completed tasks in local storage
-  Future<void> _saveCompletedTasks() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('completedTasks', completedTasks.map((e) => e.toString()).toList());
-  }
-
-  void markTaskCompleted(int taskId) {
-    setState(() {
-      completedTasks.add(taskId);
-    });
-    _saveCompletedTasks();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    int totalTasks = tasks.length;
-    int completedCount = completedTasks.length;
-    bool allCompleted = completedCount == totalTasks;
-
->>>>>>> 3ad83b7 (edited the program to incorperate the confetti)
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
             const SizedBox(height: 16),
             ToggleButtons(
-              isSelected: [
-                _selectedFloor == 1,
-                _selectedFloor == 2,
-                _selectedFloor == 3,
-              ],
-              onPressed: (index) {
-                setState(() {
-                  _selectedFloor = index + 1;
-                });
-              },
-              children: const [
-                Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('Floor 1')),
-                Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('Floor 2')),
-                Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('Floor 3')),
-              ],
-            ),
+  isSelected: [
+    _selectedFloor == 1,
+    _selectedFloor == 2,
+    _selectedFloor == 3,
+  ],
+  onPressed: (index) {
+    setState(() {
+      _selectedFloor = index + 1;
+    });
+  },
+  color: Colors.white, // Text color when NOT selected
+  selectedColor: Color(0xFF461D7C), // Text color when SELECTED
+  fillColor: Colors.white, // Always white background when selected
+  borderColor: Colors.white, // Optional: white border
+  selectedBorderColor: Colors.white,
+  borderRadius: BorderRadius.circular(8),
+  children: const [
+    Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Text('Floor 1'),
+    ),
+    Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Text('Floor 2'),
+    ),
+    Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Text('Floor 3'),
+    ),
+  ],
+),
             const SizedBox(height: 16),
             Expanded(
               child: InteractiveViewer(
@@ -675,16 +603,18 @@ class _MyHomePageState extends State<MyHomePage> {
         child: currentPage,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: Icon(Icons.question_answer), label: 'Questions'),
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        onTap: _onItemTapped,
-      ),
+  items: const <BottomNavigationBarItem>[
+    BottomNavigationBarItem(
+        icon: Icon(Icons.question_answer), label: 'Questions'),
+    BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
+    BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+  ],
+  currentIndex: _selectedIndex,
+  backgroundColor: Colors.white, // White background for the navbar
+  selectedItemColor: Color(0xFF461D7C), // LSU purple for selected icon/text
+  unselectedItemColor: Color(0xFF461D7C), // LSU purple for unselected icons
+  onTap: _onItemTapped,
+),
       floatingActionButton: FloatingActionButton(
         tooltip: 'LSU Gallery',
         child: const Icon(Icons.photo_library),
